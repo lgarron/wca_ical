@@ -1,0 +1,5 @@
+
+RewriteEngine On
+
+#  now the rewriting rules
+RewriteRule   ^WCA.ics$  feed.php
