@@ -12,7 +12,7 @@ $results_url = "http://www.worldcubeassociation.org/results";
 $competition_list_url = "{$results_url}/competitions.php";
 $competitions_base_url = "{$results_url}/c.php?i=";
 
-$cache_folder = "cache";
+$cache_folder = "wca_competition_cache";
 
 if (!is_dir($cache_folder)) {
   mkdir($cache_folder);
@@ -59,6 +59,8 @@ function get_regex($html, $regex) {
 $space = "[ ]*";
 $td = "{$space}<td[^>]*>{$space}";
 $ttd = "{$space}<\/td[^>]*>{$space}";
+$tr = "{$space}<tr[^>]*>{$space}";
+$ttr = "{$space}<\/tr[^>]*>{$space}";
 $tag_match = "(.*)";
 
 function get_info($html, $str) {
@@ -88,7 +90,7 @@ function iCalUIDHash($text) {
 
 $competition_list_html = url_get_contents_cached($competition_list_url, 1);
 
-$competition_pattern = "/<tr>.*c\.php\?i=([^\']*)\'.*<\/tr>/";
+$competition_pattern = "/{$tr}.*c\.php\?i=([^\']*)\'.*{$ttr}/";
 preg_match_all($competition_pattern, $competition_list_html, $matches);
 
 $competitions = $matches[1];
@@ -101,6 +103,18 @@ $calendar_uid = "FA600E4B-3472-4167-B61C-C6E63D4962D2";
 
 $cal_string_start .= "BEGIN:VCALENDAR\n";
 $cal_string_start .= "METHOD:PUBLISH\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:  This .ics file is meant to serve as a stream to view events from http://worldcubeassociation.org/results/competitions.php in your calendar application.\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:  - In iCal: Menu Bar > Calendar > Subscribe (Opt-Cmd-S) > paste this URL\n";
+$cal_string_start .= "COMMENT:  - In Google Calendar: Add > Add by URL > paste this URL\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:\n";
+$cal_string_start .= "COMMENT:\n";
 $cal_string_start .= "CALSCALE:GREGORIAN\n";
 $cal_string_start .= "X-WR-CALNAME:$calendar_name\n";
 $cal_string_start .= "X-WR-RELCALID:$calendar_uid\n";
@@ -139,7 +153,7 @@ foreach ($competitions as $key => $competition_id) {
   preg_match_all($date_pattern, $html, $matches);
 
   $start_date = sprintf("%04d%02d%02d", $matches[5][0], $months[$matches[1][0]], $matches[2][0]);
-  if ($matches[4] == "") {
+  if ($matches[4][0]== "") {
     $early_end_date = $start_date;
   }
   else {

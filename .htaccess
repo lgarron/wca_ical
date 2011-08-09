@@ -2,4 +2,4 @@
 RewriteEngine On
 
 #  now the rewriting rules
-RewriteRule   ^WCA.ics$  feed.php
+RewriteRule   ^wca.ics$  wca_competition_feed.php
