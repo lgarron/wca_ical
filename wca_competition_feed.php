@@ -161,7 +161,8 @@ foreach ($competitions as $key => $competition_id) {
   }
   $end_date = date("Ymd", strtotime($early_end_date." + 1 day"));
 
-  $competition_venue = get_info($html, "City")." - ".get_info($html, "Venue");
+  $competition_city = get_info($html, "City");
+  $competition_venue = $competition_city." - ".get_info($html, "Venue");
 
   $competition_wca_website = $competitions_base_url.$competition_id;
   $competition_website = get_regex($html, "/{$td}Website{$ttd}{$space}{$td}.*href=\'(http[^\']*)\'.*{$ttd}/");
@@ -175,6 +176,7 @@ foreach ($competitions as $key => $competition_id) {
   $competition_description .= "- Competition Website: ".$competition_website;
 
   $competition_description = preg_replace("/\n+/", "\n", $competition_description);
+  $competition_city = preg_replace("/,/", "\\,", $competition_city);
 
   $competition_event_string = "";
   $competition_event_string .= "BEGIN:VEVENT"."\n";
@@ -186,7 +188,7 @@ foreach ($competitions as $key => $competition_id) {
   $competition_event_string .= "DTSTART;VALUE=DATE:".$start_date."\n";
   $competition_event_string .= "SUMMARY:".$competition_name."\n";
   $competition_event_string .= "DTEND;VALUE=DATE:".$end_date."\n";
-  $competition_event_string .= "LOCATION:".$competition_venue."\n";
+  $competition_event_string .= "LOCATION:".$competition_city."\n";
   $competition_event_string .= "END:VEVENT"."\n";
 
   echo $competition_event_string;
